@@ -78,8 +78,8 @@ docker run -p 8000:8000 attrition-api
 This project is deployed on **Render** using the included `Dockerfile` and
 `render.yaml`.
 
-**Live API:** `<insert your Render URL here>`
-**Swagger docs:** `<insert your Render URL here>/docs`
+**Live API:** (https://employee-attrition-f2w0.onrender.com)
+**Swagger docs:** https://employee-attrition-f2w0.onrender.com/docs`
 
 ## API Endpoints
 
@@ -96,6 +96,7 @@ POST /predict
 {
   "Age": 35,
   "BusinessTravel": "Travel_Rarely",
+  "DailyRate": 800,
   "Department": "Research & Development",
   "DistanceFromHome": 10,
   "Education": 3,

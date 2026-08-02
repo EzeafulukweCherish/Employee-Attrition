@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Attrition API Tester</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #0f172a;
+      --panel: #111827;
+      --panel-2: #1f2937;
+      --text: #f9fafb;
+      --muted: #9ca3af;
+      --accent: #22c55e;
+      --accent-2: #3b82f6;
+      --border: #374151;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      background: linear-gradient(135deg, #020617, #111827);
+      color: var(--text);
+      padding: 24px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: rgba(17, 24, 39, 0.95);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    }
+
+    h1 { margin-top: 0; }
+    p { color: var(--muted); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    label { font-weight: 600; font-size: 0.95rem; }
+    input, select, textarea {
+      background: var(--panel-2);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 0.95rem;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: 2px solid rgba(59, 130, 246, 0.4);
+      border-color: var(--accent-2);
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    button {
+      border: none;
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .primary { background: var(--accent); color: #052e16; }
+    .secondary { background: #374151; color: var(--text); }
+
+    .response {
+      margin-top: 20px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      background: #020617;
+      min-height: 120px;
+      white-space: pre-wrap;
+      color: #e2e8f0;
+      font-family: Consolas, monospace;
+    }
+
+    .hint {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Employee Attrition Prediction Tester</h1>
+    <p>Send a payload to the deployed FastAPI endpoint and view the prediction response.</p>
+
+    <div class="field">
+      <label for="apiUrl">API URL</label>
+      <input id="apiUrl" type="text" value="https://employee-attrition-f2w0.onrender.com/predict" />
+      <div class="hint">Leave as-is or replace with your own deployed endpoint.</div>
+    </div>
+
+    <div class="actions">
+      <button class="primary" onclick="submitPrediction()">Send Prediction Request</button>
+      <button class="secondary" onclick="loadSampleData()">Load Sample Values</button>
+      <button class="secondary" onclick="resetForm()">Reset</button>
+    </div>
+
+    <form id="predictionForm" onsubmit="event.preventDefault(); submitPrediction();">
+      <div class="grid">
+        <div class="field">
+          <label for="Age">Age</label>
+          <input id="Age" name="Age" type="number" value="35" min="18" max="70" />
+        </div>
+        <div class="field">
+          <label for="BusinessTravel">Business Travel</label>
+          <select id="BusinessTravel" name="BusinessTravel">
+            <option value="Travel_Rarely">Travel_Rarely</option>
+            <option value="Travel_Frequently">Travel_Frequently</option>
+            <option value="Non-Travel">Non-Travel</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="DailyRate">Daily Rate</label>
+          <input id="DailyRate" name="DailyRate" type="number" value="800" min="0" />
+        </div>
+        <div class="field">
+          <label for="Department">Department</label>
+          <select id="Department" name="Department">
+            <option value="Research & Development">Research & Development</option>
+            <option value="Sales">Sales</option>
+            <option value="Human Resources">Human Resources</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="DistanceFromHome">Distance From Home</label>
+          <input id="DistanceFromHome" name="DistanceFromHome" type="number" value="10" min="0" />
+        </div>
+        <div class="field">
+          <label for="Education">Education</label>
+          <input id="Education" name="Education" type="number" value="3" min="1" max="5" />
+        </div>
+        <div class="field">
+          <label for="EducationField">Education Field</label>
+          <select id="EducationField" name="EducationField">
+            <option value="Life Sciences">Life Sciences</option>
+            <option value="Medical">Medical</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Technical Degree">Technical Degree</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="EnvironmentSatisfaction">Environment Satisfaction</label>
+          <input id="EnvironmentSatisfaction" name="EnvironmentSatisfaction" type="number" value="3" min="1" max="4" />
+        </div>
+        <div class="field">
+          <label for="Gender">Gender</label>
+          <select id="Gender" name="Gender">
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="HourlyRate">Hourly Rate</label>
+          <input id="HourlyRate" name="HourlyRate" type="number" value="65" min="0" />
+        </div>
+        <div class="field">
+          <label for="JobInvolvement">Job Involvement</label>
+          <input id="JobInvolvement" name="JobInvolvement" type="number" value="3" min="1" max="4" />
+        </div>
+        <div class="field">
+          <label for="JobLevel">Job Level</label>
+          <input id="JobLevel" name="JobLevel" type="number" value="2" min="1" max="5" />
+        </div>
+        <div class="field">
+          <label for="JobRole">Job Role</label>
+          <select id="JobRole" name="JobRole">
+            <option value="Research Scientist">Research Scientist</option>
+            <option value="Sales Executive">Sales Executive</option>
+            <option value="Laboratory Technician">Laboratory Technician</option>
+            <option value="Manufacturing Director">Manufacturing Director</option>
+            <option value="Healthcare Representative">Healthcare Representative</option>
+            <option value="Manager">Manager</option>
+            <option value="Sales Representative">Sales Representative</option>
+            <option value="Research Director">Research Director</option>
+            <option value="Human Resources">Human Resources</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="JobSatisfaction">Job Satisfaction</label>
+          <input id="JobSatisfaction" name="JobSatisfaction" type="number" value="3" min="1" max="4" />
+        </div>
+        <div class="field">
+          <label for="MaritalStatus">Marital Status</label>
+          <select id="MaritalStatus" name="MaritalStatus">
+            <option value="Single">Single</option>
+            <option value="Married">Married</option>
+            <option value="Divorced">Divorced</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="MonthlyIncome">Monthly Income</label>
+          <input id="MonthlyIncome" name="MonthlyIncome" type="number" value="6000" min="0" />
+        </div>
+        <div class="field">
+          <label for="MonthlyRate">Monthly Rate</label>
+          <input id="MonthlyRate" name="MonthlyRate" type="number" value="15000" min="0" />
+        </div>
+        <div class="field">
+          <label for="NumCompaniesWorked">Number of Companies Worked</label>
+          <input id="NumCompaniesWorked" name="NumCompaniesWorked" type="number" value="2" min="0" />
+        </div>
+        <div class="field">
+          <label for="OverTime">Over Time</label>
+          <select id="OverTime" name="OverTime">
+            <option value="No">No</option>
+            <option value="Yes">Yes</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="PercentSalaryHike">Percent Salary Hike</label>
+          <input id="PercentSalaryHike" name="PercentSalaryHike" type="number" value="13" min="0" />
+        </div>
+        <div class="field">
+          <label for="PerformanceRating">Performance Rating</label>
+          <input id="PerformanceRating" name="PerformanceRating" type="number" value="3" min="1" max="4" />
+        </div>
+        <div class="field">
+          <label for="RelationshipSatisfaction">Relationship Satisfaction</label>
+          <input id="RelationshipSatisfaction" name="RelationshipSatisfaction" type="number" value="3" min="1" max="4" />
+        </div>
+        <div class="field">
+          <label for="StockOptionLevel">Stock Option Level</label>
+          <input id="StockOptionLevel" name="StockOptionLevel" type="number" value="1" min="0" max="3" />
+        </div>
+        <div class="field">
+          <label for="TotalWorkingYears">Total Working Years</label>
+          <input id="TotalWorkingYears" name="TotalWorkingYears" type="number" value="8" min="0" />
+        </div>
+        <div class="field">
+          <label for="TrainingTimesLastYear">Training Times Last Year</label>
+          <input id="TrainingTimesLastYear" name="TrainingTimesLastYear" type="number" value="2" min="0" />
+        </div>
+        <div class="field">
+          <label for="WorkLifeBalance">Work Life Balance</label>
+          <input id="WorkLifeBalance" name="WorkLifeBalance" type="number" value="3" min="1" max="4" />
+        </div>
+        <div class="field">
+          <label for="YearsAtCompany">Years At Company</label>
+          <input id="YearsAtCompany" name="YearsAtCompany" type="number" value="5" min="0" />
+        </div>
+        <div class="field">
+          <label for="YearsInCurrentRole">Years In Current Role</label>
+          <input id="YearsInCurrentRole" name="YearsInCurrentRole" type="number" value="3" min="0" />
+        </div>
+        <div class="field">
+          <label for="YearsSinceLastPromotion">Years Since Last Promotion</label>
+          <input id="YearsSinceLastPromotion" name="YearsSinceLastPromotion" type="number" value="1" min="0" />
+        </div>
+        <div class="field">
+          <label for="YearsWithCurrManager">Years With Current Manager</label>
+          <input id="YearsWithCurrManager" name="YearsWithCurrManager" type="number" value="3" min="0" />
+        </div>
+      </div>
+    </form>
+
+    <h3>Response</h3>
+    <div id="responseBox" class="response">Waiting for request...</div>
+  </div>
+
+  <script>
+    const form = document.getElementById('predictionForm');
+    const responseBox = document.getElementById('responseBox');
+
+    function serializeForm() {
+      const payload = {};
+      const data = new FormData(form);
+      for (const [key, value] of data.entries()) {
+        const numericFields = [
+          'Age', 'DailyRate', 'DistanceFromHome', 'Education', 'EnvironmentSatisfaction',
+          'HourlyRate', 'JobInvolvement', 'JobLevel', 'JobSatisfaction', 'MonthlyIncome',
+          'MonthlyRate', 'NumCompaniesWorked', 'PercentSalaryHike', 'PerformanceRating',
+          'RelationshipSatisfaction', 'StockOptionLevel', 'TotalWorkingYears',
+          'TrainingTimesLastYear', 'WorkLifeBalance', 'YearsAtCompany', 'YearsInCurrentRole',
+          'YearsSinceLastPromotion', 'YearsWithCurrManager'
+        ];
+        payload[key] = numericFields.includes(key) ? Number(value) : value;
+      }
+      return payload;
+    }
+
+    function loadSampleData() {
+      document.getElementById('Age').value = 35;
+      document.getElementById('BusinessTravel').value = 'Travel_Rarely';
+      document.getElementById('DailyRate').value = 800;
+      document.getElementById('Department').value = 'Research & Development';
+      document.getElementById('DistanceFromHome').value = 10;
+      document.getElementById('Education').value = 3;
+      document.getElementById('EducationField').value = 'Life Sciences';
+      document.getElementById('EnvironmentSatisfaction').value = 3;
+      document.getElementById('Gender').value = 'Male';
+      document.getElementById('HourlyRate').value = 65;
+      document.getElementById('JobInvolvement').value = 3;
+      document.getElementById('JobLevel').value = 2;
+      document.getElementById('JobRole').value = 'Research Scientist';
+      document.getElementById('JobSatisfaction').value = 3;
+      document.getElementById('MaritalStatus').value = 'Single';
+      document.getElementById('MonthlyIncome').value = 6000;
+      document.getElementById('MonthlyRate').value = 15000;
+      document.getElementById('NumCompaniesWorked').value = 2;
+      document.getElementById('OverTime').value = 'No';
+      document.getElementById('PercentSalaryHike').value = 13;
+      document.getElementById('PerformanceRating').value = 3;
+      document.getElementById('RelationshipSatisfaction').value = 3;
+      document.getElementById('StockOptionLevel').value = 1;
+      document.getElementById('TotalWorkingYears').value = 8;
+      document.getElementById('TrainingTimesLastYear').value = 2;
+      document.getElementById('WorkLifeBalance').value = 3;
+      document.getElementById('YearsAtCompany').value = 5;
+      document.getElementById('YearsInCurrentRole').value = 3;
+      document.getElementById('YearsSinceLastPromotion').value = 1;
+      document.getElementById('YearsWithCurrManager').value = 3;
+      responseBox.textContent = 'Sample values loaded.';
+    }
+
+    function resetForm() {
+      form.reset();
+      document.getElementById('apiUrl').value = 'https://employee-attrition-f2w0.onrender.com/predict';
+      loadSampleData();
+    }
+
+    async function submitPrediction() {
+      const apiUrl = document.getElementById('apiUrl').value.trim();
+      const payload = serializeForm();
+      responseBox.textContent = 'Sending request...';
+
+      try {
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const text = await response.text();
+        let data;
+        try {
+          data = JSON.parse(text);
+        } catch {
+          data = text;
+        }
+
+        if (!response.ok) {
+          throw new Error(data?.detail || JSON.stringify(data));
+        }
+
+        responseBox.textContent = JSON.stringify(data, null, 2);
+      } catch (error) {
+        responseBox.textContent = `Request failed:\n${error.message}\n\nIf the browser blocks the call, the API may need CORS enabled or you can open this page from a local web server.`;
+      }
+    }
+
+    loadSampleData();
+  </script>
+</body>
+</html>
