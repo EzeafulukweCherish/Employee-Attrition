@@ -46,5 +46,5 @@ def predict_attrition(employee_dict: dict, model, model_columns: list) -> dict:
 
     return {
         "prediction": "Yes" if prediction == 1 else "No",
-        "probability": round(float(probability), 4),
+        "probability": round(float(probability), 6),
     }

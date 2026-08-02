@@ -8,6 +8,7 @@ class EmployeeInput(BaseModel):
     """
     Age: int = Field(..., ge=18, le=70, example=35)
     BusinessTravel: str = Field(..., example="Travel_Rarely")
+    DailyRate: int = Field(..., ge=0, example=800)
     Department: str = Field(..., example="Research & Development")
     DistanceFromHome: int = Field(..., ge=0, example=10)
     Education: int = Field(..., ge=1, le=5, example=3)
@@ -41,6 +42,7 @@ class EmployeeInput(BaseModel):
             "example": {
                 "Age": 35,
                 "BusinessTravel": "Travel_Rarely",
+                "DailyRate": 800,
                 "Department": "Research & Development",
                 "DistanceFromHome": 10,
                 "Education": 3,
