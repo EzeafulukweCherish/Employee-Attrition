@@ -1,7 +1,11 @@
+from pathlib import Path
+
 from fastapi import FastAPI, HTTPException
-from app.schemas import EmployeeInput, PredictionResponse
-from app.model_loader import load_model, load_model_columns
+from fastapi.responses import HTMLResponse
+
 from app.inference import predict_attrition
+from app.model_loader import load_model, load_model_columns
+from app.schemas import EmployeeInput, PredictionResponse
 
 app = FastAPI(
     title="Employee Attrition Prediction API",
@@ -15,13 +19,13 @@ app = FastAPI(
 model = load_model()
 model_columns = load_model_columns()
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+UI_HTML_PATH = BASE_DIR / "attrition_test_form.html"
 
-@app.get("/")
+
+@app.get("/", response_class=HTMLResponse)
 def root():
-    return {
-        "message": "Employee Attrition Prediction API is running.",
-        "docs": "/docs",
-    }
+    return HTMLResponse(content=UI_HTML_PATH.read_text(encoding="utf-8"), status_code=200)
 
 
 @app.get("/health")

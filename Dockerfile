@@ -9,6 +9,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the rest of the application
 COPY ./app ./app
 COPY ./model ./model
+COPY ./attrition_test_form.html ./attrition_test_form.html
 
 # Render sets $PORT at runtime; default to 8000 for local runs
 ENV PORT=8000
