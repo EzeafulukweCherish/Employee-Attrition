@@ -200,26 +200,18 @@
     <section class="hero">
       <div>
         <div class="pill">Live employee risk assessment</div>
-        <h1>Employee Attrition Studio</h1>
-        <p>Use this polished dashboard to submit employee details to the same FastAPI backend that powers the deployment. The prediction and probability are returned instantly for the selected profile.</p>
+        <h1>Employee Attrition</h1>
+        <p>Predict the risk of employee attrition using a machine learning model trained on HR data. Fill in the employee profile below and get a real-time prediction.</p>
       </div>
-      <div class="metric-row">
-        <div class="metric">Endpoint: /predict</div>
-        <div class="metric">Model: XGBoost + SMOTE</div>
-        <div class="metric">Deployment: Docker + Render</div>
-      </div>
+
     </section>
 
     <section class="card">
       <div class="card-header">
         <h2>Profile input</h2>
-        <div class="hint">The form sends data straight to your backend.</div>
       </div>
 
-      <div class="field" style="margin-bottom: 12px;">
-        <label for="apiUrl">Backend endpoint</label>
-        <input id="apiUrl" type="text" value="/predict" />
-      </div>
+  
 
       <div class="actions">
         <button class="primary" onclick="submitPrediction()">Run prediction</button>
